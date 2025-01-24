@@ -378,6 +378,17 @@ bodyObserver.observe(body);
     canvas.addEventListener('touchend', stopDrawing);
     canvas.addEventListener('touchcancel', stopDrawing);
 
+    
+
+
+
+
+
+
+
+
+
+
     // 保存canvas上面的图像，转base64
     function saveCanvas() {
         // 创建一个新的 canvas 用于保存最终图像

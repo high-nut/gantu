@@ -3,34 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图片编辑器</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>首页</title>
 </head>
 <body>
-    <div class="container">
-        <label for="imageInput">选择图片:</label>
-        <input type="file" id="imageInput" accept="image/*">
-        <div id="editorContainer" class="hidden">
-            <div id="imageContainer">
-                <img id="editableImage" src="" alt="Editable Image">
-                <canvas id="drawingCanvas"></canvas>
-            </div>
-            <div id="controls">
-                <button id="zoomIn" title="放大图片">+</button>
-                <button id="zoomOut" title="缩小图片">-</button>
-                <button id="brushSelect" title="涂抹选中">涂抹选中</button>
-                <button id="brushDelete" title="涂抹删除">涂抹删除</button>
-                <label for="lineWidth">线条粗细:</label>
-                <input type="range" id="lineWidthRange" value="5" min="5" max="70">
-                <input type="number" id="lineWidth" value="5" min="1" max="50">
-                <button id="saveCanvasButton">下载</button>
-                <button id="clearCanvasButton">清空</button>
-                <img id="previewImage" alt="Preview Image">
-            </div>
-        </div>
-    </div>
-   <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    <button onclick="location.href='pic.html'">前往截取图片</button>
+    <button onclick="location.href='five_.html'">前往五子棋</button>
 </body>
 </html>
