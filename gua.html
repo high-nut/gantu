@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六爻卜卦</title>
+    <link = rel="stylesheet" href="css/gua.css">
+</head>
+<body>
+    <div class="warning">解卦功能暂不可用</div>
+    <div id="hexagram">卦象将在这里显示</div>
+    <div id="decimal-value">卦象详情将在这里显示</div>
+    <div id="upperTrigram">上卦</div>
+    <div id="lowerTrigram">下卦</div>
+    <textarea id="user-question" placeholder="请输入您的问题，如近期事业情况如何，考试能否顺利通过等"></textarea>
+    <div class="button-container">
+        <button onclick="castHexagram()">起一卦</button>
+        <button onclick="interpretHexagram()">解卦</button>
+    </div>
+    <div id="interpretation">解卦内容将在这里显示</div>
+
+
+    <script>
+        function castHexagram() {
+            // 生成一个6位的二进制数组
+            const hexagramArray = [];
+            for (let i = 0; i < 6; i++) {
+                hexagramArray.push(Math.floor(Math.random() * 2));
+            }
+            // 将数组从低位到高位显示
+            const hexagramDisplay = document.getElementById('hexagram');
+            hexagramDisplay.innerHTML = '<ol>' + hexagramArray.map(bit => `<li><div class="yao-container"><span class="yao${bit === 0 ? ' yao-0' : ''}"></span></div></li>`).join('') + '</ol>';
+    
+            // 计算十进制数值
+            hexagramArray.reverse();
+            const lowerTrigram = hexagramArray.slice(0, 3);
+            const upperTrigram = hexagramArray.slice(3, 6);
+            const decimalValue = parseInt(hexagramArray.join(''), 2);
+            const upperTrigramValue = parseInt(upperTrigram.join(''), 2);
+            const lowerTrigramValue = parseInt(lowerTrigram.join(''), 2);
+    
+            // 映射数值到卦名和解释
+            const hexagramDetails = [
+                "坤为地（坤卦） 柔顺伸展 上上卦",
+                "山地剥（剥卦） 顺势而止 中下卦",
+                "水地比（比卦） 诚信团结 上上卦",
+                "风地观（观卦） 观下瞻上 中上卦",
+                "雷地豫（豫卦） 顺时依势 中中卦",
+                "火地晋（晋卦） 求进发展 中上卦",
+                "泽地萃（萃卦） 荟萃聚集 中上卦",
+                "天地否（否卦） 不交不通 中中卦",
+                "地山谦（谦卦） 内高外低 中中卦",
+                "艮为山（艮卦） 动静适时 中下卦",
+                "水山蹇（蹇卦） 险阻在前 下下卦",
+                "风山渐（渐卦） 渐进蓄德 上上卦",
+                "雷山小过（小过卦） 行动有度 中上卦",
+                "火山旅（旅卦） 依义顺时 下下卦",
+                "泽山咸（咸卦） 相互感应 中上卦",
+                "天山遁（遁卦） 遁世救世 下下卦",
+                "地水师（师卦） 行险而顺 中上卦",
+                "山水蒙（蒙卦） 启蒙奋发 中下卦",
+                "坎为水（坎卦） 行险用险 下下卦",
+                "风水涣（涣卦） 拯救涣散 下下卦",
+                "雷水解（解卦） 柔道致治 中上卦",
+                "火水未济 （未济卦） 事业未竟 中下卦",
+                "泽水困（困卦） 困境求通 中上卦",
+                "天水讼（讼卦） 慎争戒讼 中下卦",
+                "地风升（升卦） 柔顺谦虚 上上卦",
+                "山风蛊（蛊卦） 振疲起衰 中中卦",
+                "水风井（井卦） 求贤若渴 上上卦",
+                "巽为风（巽卦） 谦逊受益 中上卦",
+                "雷风恒（恒卦） 恒心有成 中上卦",
+                "火风鼎（鼎卦） 稳重图变 中下卦",
+                "泽风大过（大过卦） 非常行动 中下卦",
+                "天风姤（姤卦） 天下有风 上卦",
+                "地雷复（复卦） 寓动于顺 中中卦",
+                "山雷颐（颐卦） 纯正以养 上上卦",
+                "水雷屯（屯卦） 起始维艰 下下卦",
+                "风雷益（益卦） 损上益下 上上卦",
+                "震为雷（震卦） 临危不乱 中上卦",
+                "火雷噬嗑（噬嗑卦） 刚柔相济 上上卦",
+                "泽雷随（随卦） 随时变通 中中卦",
+                "天雷无妄（无妄卦） 无妄而得 下下卦",
+                "地火明夷（明夷卦） 晦而转明 中下卦",
+                "山火贲（贲卦） 饰外扬质 中上卦",
+                "水火既济（既济卦） 盛极将衰 中上卦",
+                "风火家人（家人卦） 诚威治业 下下卦",
+                "雷火丰（丰卦） 日中则斜 上上卦",
+                "离为火（离卦） 附和依托 中上卦",
+                "泽火革（革卦） 顺天应人 上上卦",
+                "天火同人（同人卦） 上下和同 中上卦",
+                "地泽临（临卦） 教民保民 中上卦",
+                "山泽损（损卦） 损益制衡 下下卦",
+                "水泽节（节卦） 万物有节 上上卦",
+                "风泽中孚（中孚卦） 诚信立身 下下卦",
+                "雷泽归妹（归妹卦） 立家兴业 下下卦",
+                "火泽睽（睽卦） 异中求同 下下卦",
+                "兑为泽（泽卦） 刚内柔外 上上卦",
+                "天泽履（履卦） 脚踏实地 中上卦",
+                "地天泰（泰卦） 应时而变 中中卦",
+                "山天大畜（大畜卦） 止而不止 中上卦",
+                "水天需（需卦） 守正待机 中上卦",
+                "风天小畜（小畜卦） 蓄养待进 下下卦",
+                "雷天大壮（大壮卦） 壮勿妄动 中上卦",
+                "火天大有（大有卦） 顺天依时 上上卦",
+                "泽天夬 （夬卦） 决而能和 上上卦",
+                "乾为天（乾卦） 刚健中正 上上卦"
+            ];
+    
+            // 将空格替换为换行符
+            const formattedHexagramDetails = hexagramDetails[decimalValue].replace(/ /g, '\n');
+    
+            // 更新显示内容
+            document.getElementById('decimal-value').innerText = formattedHexagramDetails;
+            document.getElementById('upperTrigram').innerText = `上卦: ${trigramNames[upperTrigramValue]}`;
+            document.getElementById('lowerTrigram').innerText = `下卦: ${trigramNames[lowerTrigramValue]}`;
+        }
+    
+
+
+        function interpretHexagram() {
+            // 获取用户输入的问题
+            const userQuestion = document.getElementById('user-question').value.trim();
+    
+            // 判断用户是否输入了问题
+            if (userQuestion === "") {
+                alert("请输入您的问题，如近期事业情况如何，考试能否顺利通过等");
+                return;
+            }
+    
+             // 判断是否已经起卦
+            const hexagramDisplay = document.getElementById('hexagram').innerText.trim();
+            if (hexagramDisplay === "卦象将在这里显示") {
+                alert("请先起卦");
+                return;
+            }
+        
+
+
+
+
+
+
+            // 获取解卦内容
+            const interpretation ="都说了不可用，还在点";
+    
+            // 更新解卦内容显示
+            document.getElementById('interpretation').innerText = `问题: ${userQuestion}\n解卦: ${interpretation}`;
+        }
+    
+        // 映射数值到卦名
+        const trigramNames = [
+            "坤为地", "艮为山", "坎为水", "巽为风",
+            "震为雷", "离为火", "兑为泽", "乾为天"
+        ];
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+#hexagram {
+    width: 200px;
+    border: 1px solid #000;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 24px;
+}
+#hexagram ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#hexagram li {
+    margin: 10px 0;
+}
+.yao {
+    display: inline-block;
+    width: 100px;
+    height: 6px;
+    background-color: black;
+}
+.yao-0::after {
+    content: '';
+    position: absolute;
+    left: 65%;
+    width: 20%;
+    height: 6px;
+    background-color: white;
+    margin-left: -25px;
+}
+.yao-container {
+    position: relative;
+    width: 100px;
+    margin: 0 auto;
+}
+#decimal-value {
+    width: 300px;
+    border: 1px solid #000;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+    white-space: pre-wrap; /* 确保换行符生效 */
+}
+#lowerTrigram, #upperTrigram {
+    width: 200px;
+    border: 1px solid #000;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+}
+#interpretation {
+    width: 300px;
+    border: 1px solid #000;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+    white-space: pre-wrap; /* 确保换行符生效 */
+}
+.button-container {
+    text-align: center;
+    margin: 20px auto;
+}
+.button-container button {
+    display: inline-block; /* 改为 inline-block */
+    margin: 0 10px; /* 增加按钮间隔 */
+    width: 150px; /* 统一按钮宽度 */
+    padding: 10px;
+    font-size: 18px;
+}
+
+.warning {
+    background-color: #ffffff; /* 背景颜色 */
+    color: #721c24; /* 文字颜色 */
+    padding: 10px; /* 内边距 */
+    border: 1px solid #f5c6cb; /* 边框 */
+    border-radius: 5px; /* 圆角 */
+    margin-top: 10px; /* 上外边距 */
+    text-align: center; /* 文本居中 */
+    font-weight: bold; /* 字体加粗 */
+}
+#user-question {
+    width: 300px; /* 设置文本框宽度 */
+    height: calc(3 * 1.5em + 20px); /* 固定高度为 3 行文字的高度 */
+    border: 1px solid #000;
+    margin: 20px auto;
+    text-align: left; /* 文本左对齐 */
+    font-size: 20px;
+    padding: 10px;
+    resize: none; /* 禁止手动调整大小 */
+    overflow-y: auto; /* 内容超出时显示垂直滚动条 */
+    line-height: 1.5; /* 设置行高 */
+    box-sizing: border-box; /* 确保 padding 和 border 包含在高度内 */
+    display: block; /* 使 textarea 元素变为块级元素 */
+}
