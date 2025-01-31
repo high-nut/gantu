@@ -12,7 +12,7 @@
     <div id="decimal-value">卦象详情将在这里显示</div>
     <div id="upperTrigram">上卦</div>
     <div id="lowerTrigram">下卦</div>
-    <textarea id="user-question" placeholder="请输入您的问题，如近期事业情况如何，考试能否顺利通过等"></textarea>
+
     <div class="button-container">
         <button onclick="castHexagram()">起一卦</button>
         <button onclick="interpretHexagram()">解卦</button>
@@ -21,12 +21,14 @@
 
 
     <script>
+        let formattedHexagramDetails; 
         function castHexagram() {
             // 生成一个6位的二进制数组
             const hexagramArray = [];
             for (let i = 0; i < 6; i++) {
                 hexagramArray.push(Math.floor(Math.random() * 2));
             }
+            
             // 将数组从低位到高位显示
             const hexagramDisplay = document.getElementById('hexagram');
             hexagramDisplay.innerHTML = '<ol>' + hexagramArray.map(bit => `<li><div class="yao-container"><span class="yao${bit === 0 ? ' yao-0' : ''}"></span></div></li>`).join('') + '</ol>';
@@ -108,7 +110,7 @@
             ];
     
             // 将空格替换为换行符
-            const formattedHexagramDetails = hexagramDetails[decimalValue].replace(/ /g, '\n');
+            formattedHexagramDetails = hexagramDetails[decimalValue].replace(/ /g, '\n');
     
             // 更新显示内容
             document.getElementById('decimal-value').innerText = formattedHexagramDetails;
@@ -118,34 +120,41 @@
     
 
 
-        function interpretHexagram() {
-            // 获取用户输入的问题
-            const userQuestion = document.getElementById('user-question').value.trim();
-    
-            // 判断用户是否输入了问题
-            if (userQuestion === "") {
-                alert("请输入您的问题，如近期事业情况如何，考试能否顺利通过等");
-                return;
-            }
-    
-             // 判断是否已经起卦
+        async function interpretHexagram() {
+            // 判断是否已经起卦
             const hexagramDisplay = document.getElementById('hexagram').innerText.trim();
             if (hexagramDisplay === "卦象将在这里显示") {
                 alert("请先起卦");
                 return;
             }
-        
 
+            // 读取64.txt文件内容
+            let response;
+            try {
+                response = await fetch('64.txt');
+                if (!response.ok) {
+                    throw new Error('网络响应不是ok');
+                }
+            } catch (error) {
+                console.error('读取文件时出错:', error);
+                alert('读取卦象描述文件失败，请检查文件路径和网络连接');
+                return;
+            }
 
+            const text = await response.text();
+            // 使用正则表达式匹配当前卦象的描述
+            const hexagramName = formattedHexagramDetails.split('（')[0]; // 提取卦象名称，例如“乾为天”
+           
+            const regex = new RegExp(`第(\\d+)卦\\s+${hexagramName}（([^）]+)）\\s+([^\\/]+?)(?=\\s+第\\d+卦)`, 'g');
+            const match = text.match(regex);
+            console.log(match);
+            let interpretation = "未找到对应的卦象描述";
+            if (match) {
+                interpretation = match[0];
+            }
 
-
-
-
-            // 获取解卦内容
-            const interpretation ="都说了不可用，还在点";
-    
             // 更新解卦内容显示
-            document.getElementById('interpretation').innerText = `问题: ${userQuestion}\n解卦: ${interpretation}`;
+            document.getElementById('interpretation').innerText = `解卦: ${interpretation}`;
         }
     
         // 映射数值到卦名
