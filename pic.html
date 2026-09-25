@@ -2,36 +2,86 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图片截取</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>图片编辑</title>
+    <link rel="stylesheet" href="css/pic.css">
 </head>
 <body>
-    <div class="container">
-        <label for="imageInput">选择图片:</label>
-        <input type="file" id="imageInput" accept="image/*">
-        <div id="editorContainer" class="hidden">
-            <div id="imageContainer">
-                <img id="editableImage" src="" alt="Editable Image">
-                <canvas id="drawingCanvas"></canvas>
+    <div class="app">
+        <header class="topbar">
+            <a class="btn" href="index.html">首页</a>
+            <button type="button" class="btn primary" id="uploadBtn">上传</button>
+            <input id="fileInput" type="file" accept="image/*" multiple hidden>
+            <button type="button" class="btn" id="undoBtn" disabled>撤销</button>
+            <button type="button" class="btn" id="redoBtn" disabled>重做</button>
+            <span class="spacer"></span>
+            <button type="button" class="btn" id="layersToggle">图层</button>
+            <button type="button" class="btn" id="exportPng">PNG</button>
+            <button type="button" class="btn" id="exportJpg">JPG</button>
+            <button type="button" class="btn" id="exportLayer" disabled>本层</button>
+        </header>
+        <div class="workspace">
+            <nav class="tools" id="tools" aria-label="工具">
+                <button type="button" class="tool active" data-tool="select">选择</button>
+                <button type="button" class="tool" data-tool="stretch">拉伸</button>
+                <button type="button" class="tool" data-tool="crop-rect">矩形</button>
+                <button type="button" class="tool" data-tool="crop-ellipse">椭圆</button>
+                <button type="button" class="tool" data-tool="crop-polygon">多边形</button>
+                <button type="button" class="tool" data-tool="crop-free">涂抹</button>
+            </nav>
+            <div class="stage-wrap">
+                <div class="stage" id="stage">
+                    <canvas id="view"></canvas>
+                    <p class="hint" id="hint">上传图片开始编辑。可一次选择多张，拖到画布上也可以。</p>
+                </div>
+                <div class="props" id="props">
+                    <div class="prop-group" id="cropActions" hidden>
+                        <button type="button" class="btn primary" id="cropApply">完成裁取</button>
+                        <button type="button" class="btn" id="cropCancel">取消</button>
+                    </div>
+                    <p class="tool-hint" id="toolHint"></p>
+                    <label class="check" id="keepRatioWrap" hidden><input type="checkbox" id="keepRatio"> 保持比例</label>
+                    <div class="prop-group" id="brushTools" hidden>
+                        <label>粗细 <input type="range" id="brushSize" min="4" max="80" value="24"></label>
+                        <button type="button" class="btn active" id="brushPaint">涂抹</button>
+                        <button type="button" class="btn" id="brushErase">擦除</button>
+                    </div>
+                    <label>透明度 <input type="range" id="opacity" min="0" max="100" value="100" disabled></label>
+                    <label>混合
+                        <select id="blend" disabled>
+                            <option value="source-over">正常</option>
+                            <option value="multiply">正片叠底</option>
+                            <option value="screen">滤色</option>
+                            <option value="overlay">叠加</option>
+                        </select>
+                    </label>
+                    <button type="button" class="btn" id="flipH" disabled>水平翻转</button>
+                    <button type="button" class="btn" id="flipV" disabled>垂直翻转</button>
+                    <button type="button" class="btn" id="rotateLeft" disabled>左转90°</button>
+                    <button type="button" class="btn" id="rotateRight" disabled>右转90°</button>
+                    <label>角度 <input type="number" id="angleInput" step="1" value="0" disabled></label>
+                    <button type="button" class="btn" id="arrangeH">横排</button>
+                    <button type="button" class="btn" id="arrangeV">竖排</button>
+                    <button type="button" class="btn" id="docResizeBtn">调整画布</button>
+                    <label>画布宽 <input type="number" id="docW" min="1" max="8192" value="800"></label>
+                    <label>画布高 <input type="number" id="docH" min="1" max="8192" value="600"></label>
+                    <label>背景 <input type="color" id="bgColor" value="#ffffff"></label>
+                    <label class="check"><input type="checkbox" id="bgTransparent" checked> 透明</label>
+                    <button type="button" class="btn" id="fitBtn">适配</button>
+                </div>
             </div>
-            <div id="controls">
-                <button id="zoomIn" title="放大图片">+</button>
-                <button id="zoomOut" title="缩小图片">-</button>
-                <button id="brushSelect" title="涂抹选中">涂抹选中</button>
-                <button id="brushDelete" title="涂抹删除">涂抹删除</button>
-                <label for="lineWidth">线条粗细:</label>
-                <input type="range" id="lineWidthRange" value="5" min="5" max="70">
-                <input type="number" id="lineWidth" value="5" min="1" max="50">
-
-                <button id="saveCanvasButton">下载</button>
-                <button id="clearCanvasButton">清空</button>
-                <img id="previewImage" alt="Preview Image">
-            </div>
+            <aside class="layers" id="layersPanel">
+                <div class="layers-head">
+                    <strong>图层</strong>
+                    <button type="button" class="btn" id="layersClose">关闭</button>
+                </div>
+                <ul id="layerList"></ul>
+                <p class="layers-empty" id="layersEmpty">还没有图层</p>
+            </aside>
         </div>
     </div>
-   <script src="js/script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    <button type="button" class="layers-backdrop" id="layersBackdrop" hidden aria-label="关闭图层"></button>
+    <div class="toast" id="toast" hidden></div>
+    <script src="js/pic.js"></script>
 </body>
 </html>
