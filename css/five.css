@@ -1,0 +1,15 @@
+.board-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+#chess {
+    display: block;
+    width: min(450px, calc(100vw - 32px));
+    height: min(450px, calc(100vw - 32px));
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(17, 24, 39, 0.12);
+}

@@ -2,13 +2,21 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>首页</title>
+    <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
-    <button onclick="location.href='pic.html'">图片编辑</button>
-    <button onclick="location.href='five_.html'">前往五子棋</button>
-    <button onclick="location.href='gua.html'">来一卦</button>
-    <button onclick="location.href='music.html'">音乐播放器</button>
+    <header class="topbar">
+        <strong class="title">首页</strong>
+    </header>
+    <main class="page">
+        <nav class="panel nav-list" aria-label="页面入口">
+            <a class="btn primary" href="pic.html">图片编辑</a>
+            <a class="btn" href="five_.html">五子棋</a>
+            <a class="btn" href="gua.html">来一卦</a>
+            <a class="btn" href="music.html">音乐播放器</a>
+        </nav>
+    </main>
 </body>
 </html>

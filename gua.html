@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>六爻卜卦</title>
-    <link = rel="stylesheet" href="css/gua.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/gua.css">
 </head>
 <body>
-    <div class="warning">解卦功能暂不可用</div>
-    <div id="hexagram">卦象将在这里显示</div>
-    <div id="decimal-value">卦象详情将在这里显示</div>
-    <div id="upperTrigram">上卦</div>
-    <div id="lowerTrigram">下卦</div>
+    <header class="topbar">
+        <a class="btn" href="index.html">首页</a>
+        <strong class="title">来一卦</strong>
+    </header>
+    <main class="page">
+        <div class="panel gua-panel">
+            <div id="hexagram">卦象将在这里显示</div>
+            <div id="decimal-value">卦象详情将在这里显示</div>
+            <div id="upperTrigram">上卦</div>
+            <div id="lowerTrigram">下卦</div>
+            <div class="button-container">
+                <button type="button" class="btn primary" onclick="castHexagram()">起一卦</button>
+                <button type="button" class="btn" onclick="interpretHexagram()">解卦</button>
+            </div>
+            <div id="interpretation">解卦内容将在这里显示</div>
+        </div>
+    </main>
 
-    <div class="button-container">
-        <button onclick="castHexagram()">起一卦</button>
-        <button onclick="interpretHexagram()">解卦</button>
-    </div>
-    <div id="interpretation">解卦内容将在这里显示</div>
 
-
+    <script src="js/gua-text.js"></script>
     <script>
-        let formattedHexagramDetails; 
+        let formattedHexagramDetails;
+        let currentHexagramTitle; 
         function castHexagram() {
             // 生成一个6位的二进制数组
             const hexagramArray = [];
@@ -110,7 +119,8 @@
             ];
     
             // 将空格替换为换行符
-            formattedHexagramDetails = hexagramDetails[decimalValue].replace(/ /g, '\n');
+            currentHexagramTitle = hexagramDetails[decimalValue];
+            formattedHexagramDetails = currentHexagramTitle.replace(/ /g, '\n');
     
             // 更新显示内容
             document.getElementById('decimal-value').innerText = formattedHexagramDetails;
@@ -128,33 +138,22 @@
                 return;
             }
 
-            // 读取64.txt文件内容
-            let response;
-            try {
-                response = await fetch('64.txt');
-                if (!response.ok) {
-                    throw new Error('网络响应不是ok');
-                }
-            } catch (error) {
-                console.error('读取文件时出错:', error);
-                alert('读取卦象描述文件失败，请检查文件路径和网络连接');
+            if (!window.HEXAGRAM_BOOK) {
+                alert("未读到卦象资料");
                 return;
             }
+            const interpretation = findInterpretation(window.HEXAGRAM_BOOK, currentHexagramTitle);
+            document.getElementById("interpretation").innerText = interpretation;
+        }
 
-            const text = await response.text();
-            // 使用正则表达式匹配当前卦象的描述
-            const hexagramName = formattedHexagramDetails.split('（')[0]; // 提取卦象名称，例如“乾为天”
-           
-            const regex = new RegExp(`第(\\d+)卦\\s+${hexagramName}（([^）]+)）\\s+([^\\/]+?)(?=\\s+第\\d+卦)`, 'g');
-            const match = text.match(regex);
-            console.log(match);
-            let interpretation = "未找到对应的卦象描述";
-            if (match) {
-                interpretation = match[0];
-            }
-
-            // 更新解卦内容显示
-            document.getElementById('interpretation').innerText = `解卦: ${interpretation}`;
+        function findInterpretation(text, title) {
+            const name = title.split('（')[0].replace(/\s+/g, '');
+            const blocks = text.split(/\n(?=第\d+卦\s)/);
+            const block = blocks.find(function (item) {
+                const head = item.split('\n')[0].replace(/^第\d+卦\s*/, '');
+                return head.split('（')[0].replace(/\s+/g, '') === name;
+            });
+            return block ? block.trim() : '未找到对应的卦象描述';
         }
     
         // 映射数值到卦名
